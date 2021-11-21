@@ -27,7 +27,7 @@ class WebsiteCommunicator {
             
             this.connected = true
         }catch(e){
-            console.log(JSON.stringify(e))
+            console.log(JSON.stringify(e, undefined, 2))
             console.log("At onconnect, appId " + this.appId)
         }
     }
@@ -36,7 +36,7 @@ class WebsiteCommunicator {
         try{
             this.onData(data)
         }catch(e){
-            console.log(JSON.stringify(e))
+            console.log(JSON.stringify(e, undefined, 2))
             console.log("At ondata, appId " + this.appId)
         }
     }

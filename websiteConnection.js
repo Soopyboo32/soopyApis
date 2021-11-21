@@ -140,6 +140,8 @@ class WebsiteConnection {
                 Thread.sleep(5000)
                 this.connect()
             }).start()
+        } else if(data.type === serverData.packetTypesReverse.ping){
+            this.sendData(this.createPacket(serverData.packetTypesReverse.ping, 0, {}))
         }
     }
 
