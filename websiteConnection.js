@@ -26,6 +26,10 @@ class WebsiteConnection {
             }
             this.lastTick = Date.now()
         })
+
+        register("gameUnload", ()=>{
+            this.disconnect()
+        })
     }
 
     connect(){
@@ -81,13 +85,6 @@ class WebsiteConnection {
             let shouldReCon = false
             if(this.connected && shouldCont){
                 shouldReCon = true
-            }
-            if(Date.now()-this.lastTick > 500){
-                shouldReCon = false
-                this.disconnect()
-            }
-            if(shouldCont && this.socket){
-                this.disconnect()
             }
             if(shouldReCon){
                 Thread.sleep(1000)
