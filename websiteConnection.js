@@ -11,7 +11,6 @@ class WebsiteConnection {
         this.connected = false
         this.output = undefined
         this.writer = undefined
-        this.lastTick = -1
         this.reconDelay = 1000
 
         this.connectedFull = false
