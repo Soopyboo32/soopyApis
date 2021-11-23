@@ -18,14 +18,7 @@ class WebsiteConnection {
 
         this.handlers = {}
 
-        register("tick",()=>{
-            if(this.lastTick === -1){
-                this.lastTick = Date.now()
-                this.connect()
-                return;
-            }
-            this.lastTick = Date.now()
-        })
+        this.connect()
 
         register("gameUnload", ()=>{
             this.disconnect()
@@ -65,7 +58,7 @@ class WebsiteConnection {
 
             let shouldCont = true
 
-            while(this.connected && this.socket !== null && shouldCont && Date.now()-this.lastTick < 500) {
+            while(this.connected && this.socket !== null && shouldCont) {
                 try {
                     let data = reader.readLine()
                     if(data){
