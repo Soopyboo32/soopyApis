@@ -17,15 +17,20 @@ class WebsiteConnection {
 
         this.handlers = {}
 
-        this.connect()
+
+        this.gameRunning = true
 
         register("gameUnload", ()=>{
+            this.gameRunning = false
             this.disconnect()
         })
+        this.connect()
     }
 
     connect(){
         //connect to server
+
+        if(!this.gameRunning) return;
 
         if(this.connected) return;
 
@@ -57,7 +62,7 @@ class WebsiteConnection {
 
             let shouldCont = true
 
-            while(this.connected && this.socket !== null && shouldCont) {
+            while(this.connected && this.socket !== null && shouldCont && this.gameRunning) {
                 try {
                     let data = reader.readLine()
                     if(data){
@@ -89,10 +94,9 @@ class WebsiteConnection {
     disconnect(){
         //disconnect from server
 
-        this.socket.close();
+        if(this.socket)this.socket.close();
         this.socket = null;
         this.connected = false;
-        this.connected = false
 
         console.log("disconnecting from soopy socket")
     }
