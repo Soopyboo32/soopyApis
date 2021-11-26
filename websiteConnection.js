@@ -106,7 +106,7 @@ class WebsiteConnection {
         if(!this.connected) return;
         if(!this.socket) return;
 
-        this.writer.println(data);
+        this.writer.println(data.replace(/\n/g, ""));
     }
 
     onData(data){
