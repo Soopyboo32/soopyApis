@@ -160,6 +160,10 @@ class WebsiteConnection {
 if(!global.SoopyWebsiteConnectionThingConnection){
 
     global.SoopyWebsiteConnectionThingConnection = new WebsiteConnection();
+    
+    register("gameUnload", ()=>{
+        global.SoopyWebsiteConnectionThingConnection = undefined
+    })
 }
 
 export default global.SoopyWebsiteConnectionThingConnection;
