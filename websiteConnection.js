@@ -2,6 +2,18 @@ const Socket = Java.type("java.net.Socket");
 const InputStreamReader = Java.type("java.io.InputStreamReader");
 const BufferedReader = Java.type("java.io.BufferedReader");
 const PrintWriter = Java.type("java.io.PrintWriter");
+let Executors = Java.type("java.util.concurrent.Executors")
+
+class NonPooledThread {
+    constructor(fun) {
+        this.fun = fun
+        this.executor = Executors.newSingleThreadExecutor()
+    }
+
+    start() {
+        this.executor.execute(this.fun)
+    }
+}
 
 import serverData from "./socketData";
 
@@ -20,25 +32,25 @@ class WebsiteConnection {
 
         this.gameRunning = true
 
-        register("gameUnload", ()=>{
+        register("gameUnload", () => {
             this.gameRunning = false
             this.disconnect()
         })
         this.connect()
     }
 
-    connect(){
+    connect() {
         //connect to server
 
-        if(!this.gameRunning) return;
+        if (!this.gameRunning) return;
 
-        if(this.connected) return;
+        if (this.connected) return;
 
         this.connectedFull = false
         console.log("connecting to soopy socket")
-        try{
-        this.socket = new Socket("soopymc.my.to", serverData.port);
-        }catch(e){
+        try {
+            this.socket = new Socket("soopy.dev", serverData.port);
+        } catch (e) {
             console.log("socket error: " + JSON.stringify(e, undefined, 2))
             console.log("reconnecting in " + this.reconDelay + "ms")
             new Thread(() => {
@@ -56,19 +68,19 @@ class WebsiteConnection {
 
         this.reconDelay = 1000
 
-        new Thread(() => {
+        new NonPooledThread(() => {
             let input = this.socket.getInputStream();
             let reader = new BufferedReader(new InputStreamReader(input));
 
             let shouldCont = true
 
-            while(this.connected && this.socket !== null && shouldCont && this.gameRunning) {
+            while (this.connected && this.socket !== null && shouldCont && this.gameRunning) {
                 try {
                     let data = reader.readLine()
-                    if(data){
+                    if (data) {
                         this.onData(JSON.parse(data))
                     }
-                } catch(e) {
+                } catch (e) {
                     console.log("SOCKET ERROR (soopyApis/websiteConnection.js)")
                     console.error(JSON.stringify(e))
                     this.disconnect()
@@ -80,10 +92,10 @@ class WebsiteConnection {
                 }
             }
             let shouldReCon = false
-            if(this.connected && shouldCont){
+            if (this.connected && shouldCont) {
                 shouldReCon = true
             }
-            if(shouldReCon){
+            if (shouldReCon) {
                 Thread.sleep(1000)
                 console.log("Attempting to reconnect to the server")
                 this.connect()
@@ -91,28 +103,28 @@ class WebsiteConnection {
         }).start();
     }
 
-    disconnect(){
+    disconnect() {
         //disconnect from server
 
-        if(this.socket)this.socket.close();
+        if (this.socket) this.socket.close();
         this.socket = null;
         this.connected = false;
 
         console.log("disconnecting from soopy socket")
     }
 
-    sendData(data){
+    sendData(data) {
         //send data to server
-        if(!this.connected) return;
-        if(!this.socket) return;
+        if (!this.connected) return;
+        if (!this.socket) return;
 
         this.writer.println(data.replace(/\n/g, ""));
     }
 
-    onData(data){
+    onData(data) {
         // console.log(JSON.stringify(data, undefined, 2));
 
-        if(data.type === serverData.packetTypesReverse.connectionSuccess){
+        if (data.type === serverData.packetTypesReverse.connectionSuccess) {
 
             this.sendData(this.createPacket(serverData.packetTypesReverse.connectionSuccess, 0, {
                 "username": Player.getName(),
@@ -121,26 +133,26 @@ class WebsiteConnection {
 
             Object.values(this.handlers).forEach(handler => handler._onConnect())
             this.connectedFull = true
-        } else if(data.type === serverData.packetTypesReverse.data){
-            if(this.handlers[data.server]){
+        } else if (data.type === serverData.packetTypesReverse.data) {
+            if (this.handlers[data.server]) {
                 this.handlers[data.server]._onData(data.data)
-            }else if(data.noHandlerMessage){
+            } else if (data.noHandlerMessage) {
                 ChatLib.chat(data.noHandlerMessage)
             }
-        } else if(data.type === serverData.packetTypesReverse.serverReboot){
+        } else if (data.type === serverData.packetTypesReverse.serverReboot) {
             this.disconnect()
-            new Thread(()=>{
+            new Thread(() => {
                 Thread.sleep(5000)
                 this.connect()
             }).start()
-        } else if(data.type === serverData.packetTypesReverse.ping){
+        } else if (data.type === serverData.packetTypesReverse.ping) {
             this.sendData(this.createPacket(serverData.packetTypesReverse.ping, 0, {}))
         }
     }
 
-    addHandler(handler){
+    addHandler(handler) {
         this.handlers[handler.appId] = handler;
-        if(this.connectedFull){
+        if (this.connectedFull) {
             handler._onConnect()
         }
     }
@@ -157,11 +169,11 @@ class WebsiteConnection {
         })
     }
 }
-if(!global.SoopyWebsiteConnectionThingConnection){
+if (!global.SoopyWebsiteConnectionThingConnection) {
 
     global.SoopyWebsiteConnectionThingConnection = new WebsiteConnection();
-    
-    register("gameUnload", ()=>{
+
+    register("gameUnload", () => {
         global.SoopyWebsiteConnectionThingConnection = undefined
     })
 }

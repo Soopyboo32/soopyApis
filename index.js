@@ -101,7 +101,7 @@ function setLocation(locationString, xOff, yOff) {
 }
 
 import WebsiteCommunicator from "./websiteCommunicator";
-import socketData from "./socketData";
+import socketData from "./socketData.js";
 
 class SoopyApisServer extends WebsiteCommunicator {
 	constructor() {
@@ -120,7 +120,7 @@ class SoopyApisServer extends WebsiteCommunicator {
 new Thread(()=>{
 	//Update data file from website
 
-	let data = FileLib.getUrlContent("http://soopymc.my.to/socketserver/data.json")
+	let data = FileLib.getUrlContent("http://soopy.dev/socketserver/data.json")
 	FileLib.write("soopyApis", "socketData.js", "export default "+data)
 	socketData = JSON.parse(data)
 }).start()

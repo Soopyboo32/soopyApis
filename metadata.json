@@ -3,5 +3,6 @@
     "creator": "Soopyboo32",
     "description": "Some random apis that soopy's mods use",
     "requires": [],
-    "version": "0.1.11" 
+    "entry": "index.js",
+    "version": "0.1.12" 
 }

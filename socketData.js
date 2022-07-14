@@ -34,12 +34,24 @@ export default {
             "name": "soopyv2",
             "displayName": "SoopyV2",
             "module": "SoopyV2"
+        },
+        "4": {
+            "name": "sbgbot",
+            "displayName": "SbgBot",
+            "module": "sbgbot"
+        },
+        "5": {
+            "name": "socketutils",
+            "displayName": "SocketUtils",
+            "module": "socketUtils"
         }
     },
     "serverNameToId": {
         "soopyapis": "0",
         "soopytestchatthing": "1",
         "minewaypoints": "2",
-        "soopyv2": "3"
+        "soopyv2": "3",
+        "sbgbot": "4",
+        "socketutils": "5"
     }
 }
