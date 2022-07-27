@@ -44,6 +44,16 @@ export default {
             "name": "socketutils",
             "displayName": "SocketUtils",
             "module": "socketUtils"
+        },
+        "6": {
+            "name": "legalmap",
+            "displayName": "LegalMap",
+            "module": "LegalMap"
+        },
+        "7": {
+            "name": "bettermap",
+            "displayName": "BetterMap",
+            "module": "BetterMap"
         }
     },
     "serverNameToId": {
@@ -52,6 +62,8 @@ export default {
         "minewaypoints": "2",
         "soopyv2": "3",
         "sbgbot": "4",
-        "socketutils": "5"
+        "socketutils": "5",
+        "legalmap": "6",
+        "bettermap": "7"
     }
 }

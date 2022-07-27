@@ -32,11 +32,34 @@ class WebsiteConnection {
 
         this.gameRunning = true
 
+        this.sendDataArr = []
+
         register("gameUnload", () => {
             this.gameRunning = false
             this.disconnect()
         })
         this.connect()
+
+        // send data to server in seperate thread to stop game freezes
+        new NonPooledThread(() => {
+
+            while (this.gameRunning) {
+                if (this.connected && this.socket) {
+                    if (this.sendDataArr.length > 0) {
+                        for (let line of this.sendDataArr) {
+                            this.writer.println(line);
+                        }
+                        this.sendDataArr = []
+                    } else {
+                        Thread.sleep(100)
+                    }
+                } else {
+                    Thread.sleep(1000)
+                }
+            }
+
+            this.writer.println(data.replace(/\n/g, ""));
+        }).start()
     }
 
     connect() {
@@ -101,6 +124,8 @@ class WebsiteConnection {
                 this.connect()
             }
         }).start();
+
+
     }
 
     disconnect() {
@@ -118,7 +143,7 @@ class WebsiteConnection {
         if (!this.connected) return;
         if (!this.socket) return;
 
-        this.writer.println(data.replace(/\n/g, ""));
+        this.sendDataArr.push(data.replace(/\n/g, ""))
     }
 
     onData(data) {
