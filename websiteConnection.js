@@ -147,13 +147,18 @@ class WebsiteConnection {
     }
 
     onData(data) {
-        // console.log(JSON.stringify(data, undefined, 2));
 
         if (data.type === serverData.packetTypesReverse.connectionSuccess) {
 
+            //THANKS FORK
+            const serverId = java.util.UUID.randomUUID().toString().replace(/-/g, "")
+
+            Client.getMinecraft().func_152347_ac().joinServer(Client.getMinecraft().func_110432_I().func_148256_e(), Client.getMinecraft().func_110432_I().func_148254_d(), serverId)
+
             this.sendData(this.createPacket(serverData.packetTypesReverse.connectionSuccess, 0, {
-                "username": Player.getName(),
-                "uuid": Player.getUUID()
+                username: Player.getName(),
+                uuid: Player.getUUID(),
+                serverId
             }))
 
             Object.values(this.handlers).forEach(handler => handler._onConnect())

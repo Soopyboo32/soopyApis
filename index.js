@@ -108,21 +108,25 @@ class SoopyApisServer extends WebsiteCommunicator {
 		super(socketData.serverNameToId.soopyapis);
 	}
 
-	onData(data){
-		switch(data.type){
+	onData(data) {
+		switch (data.type) {
 			case "message":
 				ChatLib.chat(data.message);
-			break;
+				break;
 		}
 	}
 }
 
-new Thread(()=>{
+new Thread(() => {
 	//Update data file from website
 
-	let data = FileLib.getUrlContent("http://soopy.dev/socketserver/data.json")
-	FileLib.write("soopyApis", "socketData.js", "export default "+data)
-	socketData = JSON.parse(data)
+	try {
+		let data = FileLib.getUrlContent("http://soopy.dev/socketserver/data.json")
+		socketData = JSON.parse(data)
+		FileLib.write("soopyApis", "socketData.js", "export default " + data)
+	} catch (e) {
+		console.error(e)
+	}
 }).start()
 
 let soopyApisServer = new SoopyApisServer()
