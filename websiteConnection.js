@@ -151,7 +151,7 @@ class WebsiteConnection {
         if (data.type === serverData.packetTypesReverse.connectionSuccess) {
 
             //THANKS FORK
-            const serverId = java.util.UUID.randomUUID().toString().replace(/-/g, "")
+            let serverId = java.util.UUID.randomUUID().toString().replace(/-/g, "")
             try {
                 Client.getMinecraft().func_152347_ac().joinServer(Client.getMinecraft().func_110432_I().func_148256_e(), Client.getMinecraft().func_110432_I().func_148254_d(), serverId)
             } catch (e) { serverId = undefined }
