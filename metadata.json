@@ -2,9 +2,7 @@
     "name": "soopyApis",
     "creator": "Soopyboo32",
     "description": "Some random apis that soopy's mods use",
-    "requires": [
-        "mappings"
-    ],
+    "requires": [],
     "entry": "index.js",
-    "version": "0.1.16"
+    "version": "0.1.17"
 }
